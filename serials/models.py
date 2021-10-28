@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from embed_video.fields import EmbedVideoField
 
@@ -24,6 +25,10 @@ class TVSeries(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        """Get absolute URL for series."""
+        return reverse('series_detail', kwargs={'series_slug': self.slug})
+
 
 class Category(models.Model):
     """Model representing TV series categories."""
@@ -36,6 +41,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        """Get absolute URL for category."""
+        return reverse('category', kwargs={'category_slug': self.slug})
 
 
 class Genre(models.Model):
