@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 
 from serials.models import TVSeries
@@ -26,12 +26,16 @@ def login(request):
     return HttpResponse("Авторизация")
 
 
-def series_detail(request, series_id):
-    return HttpResponse(f'Отображение сериала с id = {series_id}')
+def series_detail(request, series_slug):
+    series = get_object_or_404(TVSeries, slug=series_slug)
+    context = {
+        'series': series,
+    }
+    return render(request, 'serials/series_detail.html', context=context)
 
 
-def show_category(request, category_id):
-    serials = TVSeries.objects.filter(category_id=category_id)
+def show_category(request, category_slug):
+    serials = TVSeries.objects.filter(category__slug=category_slug)
     context = {
         'serials': serials,
     }
