@@ -6,6 +6,7 @@ from serials.models import TVSeries
 
 
 class SerialsHomeView(ListView):
+    paginate_by = 6
     model = TVSeries
     template_name = 'serials/index.html'
     context_object_name = 'serials'
@@ -22,6 +23,7 @@ class SeriesDetail(DetailView):
 
 
 class SerialsCategory(ListView):
+    paginate_by = 6
     model = TVSeries
     template_name = 'serials/index.html'
     context_object_name = 'serials'
