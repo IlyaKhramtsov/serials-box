@@ -66,6 +66,7 @@ class Crew(models.Model):
     name = models.CharField(max_length=100, verbose_name="Имя")
     description = models.TextField(blank=True, verbose_name="Описание")
     photo = models.ImageField(upload_to="crew/", verbose_name="Фото")
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
 
     class Meta:
         verbose_name = "Актеры и режиссеры"
