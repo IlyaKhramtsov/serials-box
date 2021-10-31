@@ -74,3 +74,6 @@ class Crew(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('crew_detail', kwargs={"crew_slug": self.slug})
