@@ -1,6 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView, ListView
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, FormView, ListView
 
 from serials.models import TVSeries, Crew
 
@@ -12,7 +13,7 @@ class SerialsHomeView(ListView):
     context_object_name = 'serials'
 
     def get_queryset(self):
-        return TVSeries.objects.filter(is_published=True)
+        return TVSeries.objects.filter(is_published=True).select_related('category')
 
 
 class SeriesDetail(DetailView):
@@ -29,7 +30,10 @@ class SerialsCategory(ListView):
     context_object_name = 'serials'
 
     def get_queryset(self):
-        return TVSeries.objects.filter(category__slug=self.kwargs['category_slug'], is_published=True)
+        return TVSeries.objects.filter(
+            category__slug=self.kwargs['category_slug'],
+            is_published=True
+        ).select_related('category')
 
 
 class CrewDetail(DetailView):
@@ -42,6 +46,3 @@ class CrewDetail(DetailView):
 def about(request):
     return render(request, 'serials/about.html', {'title': 'О проекте'})
 
-
-def contact(request):
-    return HttpResponse("Обратная связь")
