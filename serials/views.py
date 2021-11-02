@@ -41,8 +41,3 @@ class CrewDetail(DetailView):
     template_name = 'serials/crew_detail.html'
     slug_url_kwarg = 'crew_slug'
     context_object_name = 'crew'
-
-
-def about(request):
-    return render(request, 'serials/about.html', {'title': 'О проекте'})
-
