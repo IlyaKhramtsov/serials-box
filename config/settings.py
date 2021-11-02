@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'captcha',
     'serials.apps.SerialsConfig',
     'users.apps.UsersConfig',
+    'blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [
