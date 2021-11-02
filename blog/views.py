@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import DetailView, ListView
 
 from blog.models import Article
 
@@ -11,3 +10,10 @@ class BlogHomeView(ListView):
 
     def get_queryset(self):
         return Article.objects.filter(is_published=True)
+
+
+class ArticleDetail(DetailView):
+    model = Article
+    template_name = 'blog/article.html'
+    slug_url_kwarg = 'article_slug'
+    context_object_name = 'article'
