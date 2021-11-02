@@ -10,19 +10,19 @@ from captcha.fields import CaptchaField, CaptchaTextInput
 class RegisterUserForm(UserCreationForm):
     """Registration form."""
     username = forms.CharField(
-        label='Логин',
+        label='',
         widget=forms.TextInput(attrs={'placeholder': 'Логин'})
     )
     email = forms.EmailField(
-        label='Email',
+        label='',
         widget=forms.EmailInput(attrs={'placeholder': 'Email'})
     )
     password1 = forms.CharField(
-        label='Пароль',
+        label='',
         widget=forms.PasswordInput(attrs={'placeholder': 'Пароль'})
     )
     password2 = forms.CharField(
-        label='Повтор пароля',
+        label='',
         widget=forms.PasswordInput(attrs={'placeholder': 'Повтор пароля'})
     )
 
