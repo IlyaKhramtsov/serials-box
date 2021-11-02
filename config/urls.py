@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('captcha/', include('captcha.urls')),
+    path('pages/', include('django.contrib.flatpages.urls')),
     path('', include('serials.urls')),
 ]
 
