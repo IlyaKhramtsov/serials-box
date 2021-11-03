@@ -3,6 +3,7 @@ from django.views.generic import CreateView, FormView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
 from django.urls import reverse_lazy
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
 
 from users.forms import LoginUserForm, RegisterUserForm, ContactForm
@@ -33,12 +34,13 @@ def logout_user(request):
     return redirect('login')
 
 
-class ContactFormView(CreateView):
+class ContactFormView(SuccessMessageMixin, CreateView):
     model = Contact
     form_class = ContactForm
     template_name = 'users/contact.html'
     success_url = reverse_lazy('home')
+    success_message = 'Форма успешно отправлена!'
 
-    def form_valid(self, form):
-        form.save()
-        return redirect('home')
+    def get_success_message(self, cleaned_data):
+        return self.success_message % cleaned_data
+
