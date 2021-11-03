@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from serials.models import Category, Crew, Genre, TVSeries
+from serials.models import Category, Comment, Crew, Genre, TVSeries
 
 
 class TVSerialsAdmin(admin.ModelAdmin):
@@ -30,6 +30,13 @@ class GenreAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'name')
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('series', 'created')
+    list_filter = ('created', 'updated')
+    search_fields = ('text',)
 
 
 admin.site.register(Category, CategoryAdmin)

@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 from embed_video.fields import EmbedVideoField
 
@@ -78,3 +79,19 @@ class Crew(models.Model):
 
     def get_absolute_url(self):
         return reverse('crew_detail', kwargs={"crew_slug": self.slug})
+
+
+class Comment(models.Model):
+    series = models.ForeignKey(TVSeries, on_delete=models.CASCADE, verbose_name='Сериал', related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор комментария')
+    text = models.TextField(verbose_name='Текст')
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+    updated = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ('created',)
+
+    def __str__(self):
+        return f'Комментарий от {self.author} на {self.series}'
