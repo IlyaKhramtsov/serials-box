@@ -1,16 +1,16 @@
 from django.shortcuts import redirect
-from django.views.generic import CreateView, FormView
+from django.views.generic import CreateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.mail import send_mail
 
 from users.forms import LoginUserForm, RegisterUserForm, ContactForm
 from users.models import Contact
 
 
 class RegisterUser(CreateView):
+    """Register user."""
     form_class = RegisterUserForm
     template_name = 'users/register.html'
     success_url = reverse_lazy('login')
@@ -22,6 +22,7 @@ class RegisterUser(CreateView):
 
 
 class LoginUser(LoginView):
+    """Login user."""
     form_class = LoginUserForm
     template_name = 'users/login.html'
 
@@ -30,11 +31,13 @@ class LoginUser(LoginView):
 
 
 def logout_user(request):
+    """Logout user."""
     logout(request)
     return redirect('login')
 
 
 class ContactFormView(SuccessMessageMixin, CreateView):
+    """Contact form."""
     model = Contact
     form_class = ContactForm
     template_name = 'users/contact.html'
@@ -43,4 +46,3 @@ class ContactFormView(SuccessMessageMixin, CreateView):
 
     def get_success_message(self, cleaned_data):
         return self.success_message % cleaned_data
-
