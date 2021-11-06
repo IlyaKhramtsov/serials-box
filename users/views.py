@@ -1,12 +1,12 @@
 from django.shortcuts import redirect
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 
 from users.forms import LoginUserForm, RegisterUserForm, ContactForm
-from users.models import Contact
+from users.models import Contact, Profile
 
 
 class RegisterUser(CreateView):
@@ -46,3 +46,12 @@ class ContactFormView(SuccessMessageMixin, CreateView):
 
     def get_success_message(self, cleaned_data):
         return self.success_message % cleaned_data
+
+
+class UserProfileView(DetailView):
+    model = Profile
+    template_name = 'users/user_profile.html'
+    context_object_name = 'page_user'
+
+    def get_queryset(self):
+        return Profile.objects.filter(id=self.kwargs['pk'])
