@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'embed_video',
     'captcha',
+    'ckeditor',
     'serials.apps.SerialsConfig',
     'users.apps.UsersConfig',
     'blog.apps.BlogConfig',
