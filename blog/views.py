@@ -1,6 +1,5 @@
 from django.views.generic import DetailView, ListView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
 
 from blog.models import Article
 from blog.forms import AddPostForm
@@ -22,8 +21,10 @@ class ArticleDetail(DetailView):
     context_object_name = 'article'
 
 
-class AddPost(LoginRequiredMixin, CreateView):
+class AddPostView(LoginRequiredMixin, CreateView):
     form_class = AddPostForm
     template_name = 'blog/add_post.html'
-    success_url = reverse_lazy('blog')
-    login_url = reverse_lazy('blog')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(AddPostView, self).form_valid(form)
