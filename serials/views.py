@@ -1,5 +1,6 @@
-from django.shortcuts import redirect
-from django.views.generic import DetailView, ListView, FormView
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, ListView, CreateView
 
 from serials.forms import CommentForm
 from serials.models import TVSeries, Crew
@@ -16,20 +17,28 @@ class SerialsHomeView(ListView):
         return TVSeries.objects.filter(is_published=True).select_related('category')
 
 
-class SeriesDetail(FormView, DetailView):
+class SeriesDetail(DetailView):
     """Shows information about the series."""
     model = TVSeries
     template_name = 'serials/series_detail.html'
     slug_url_kwarg = 'series_slug'
     context_object_name = 'series'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = CommentForm()
+        return context
+
+
+class AddCommentView(CreateView):
     form_class = CommentForm
+    template_name = 'serials/series_detail.html'
+    success_url = reverse_lazy('home')  # fix url
 
     def form_valid(self, form):
-        comment = form.save(commit=False)
-        comment.series = self.get_object()
-        comment.author = self.request.user
-        comment.save()
-        return redirect(self.get_object().get_absolute_url())
+        form.instance.series = get_object_or_404(TVSeries, pk=self.kwargs.get('pk'))
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class SerialsCategory(ListView):
