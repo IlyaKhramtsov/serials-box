@@ -26,8 +26,13 @@ class ArticleDetail(DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         stuff = get_object_or_404(Article, slug=self.kwargs.get(self.slug_url_kwarg))
+
         total_likes = stuff.total_likes()
+        liked = False
+        if stuff.likes.filter(id=self.request.user.id).exists():
+            liked = True
         context['total_likes'] = total_likes
+        context['liked'] = liked
         return context
 
 
@@ -42,5 +47,11 @@ class AddPostView(LoginRequiredMixin, CreateView):
 
 def LikeView(request, slug):
     article = get_object_or_404(Article, slug=request.POST.get('article_slug'))
-    article.likes.add(request.user)
+    liked = False
+    if article.likes.filter(id=request.user.id).exists():
+        article.likes.remove(request.user)
+        liked = False
+    else:
+        article.likes.add(request.user)
+        liked = True
     return HttpResponseRedirect(reverse('article_detail', args=[str(slug)]))
