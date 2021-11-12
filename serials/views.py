@@ -1,5 +1,5 @@
-from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy, reverse
 from django.views.generic import DetailView, ListView, CreateView
 
 from serials.forms import CommentForm
@@ -33,12 +33,14 @@ class SeriesDetail(DetailView):
 class AddCommentView(CreateView):
     form_class = CommentForm
     template_name = 'serials/series_detail.html'
-    success_url = reverse_lazy('home')  # fix url
 
     def form_valid(self, form):
         form.instance.series = get_object_or_404(TVSeries, pk=self.kwargs.get('pk'))
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('series_detail', args=[self.object.series.slug])
 
 
 class SerialsCategory(ListView):
