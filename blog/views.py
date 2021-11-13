@@ -1,8 +1,8 @@
-from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from blog.models import Article
 from blog.forms import AddPostForm
@@ -26,7 +26,6 @@ class ArticleDetail(DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         stuff = get_object_or_404(Article, slug=self.kwargs.get(self.slug_url_kwarg))
-
         total_likes = stuff.total_likes()
         liked = False
         if stuff.likes.filter(id=self.request.user.id).exists():
@@ -36,13 +35,25 @@ class ArticleDetail(DetailView):
         return context
 
 
-class AddPostView(LoginRequiredMixin, CreateView):
+class AddArticleView(LoginRequiredMixin, CreateView):
     form_class = AddPostForm
-    template_name = 'blog/add_post.html'
+    template_name = 'blog/add_article.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super(AddPostView, self).form_valid(form)
+        return super().form_valid(form)
+
+
+class UpdateArticleView(LoginRequiredMixin, UpdateView):
+    model = Article
+    form_class = AddPostForm
+    template_name = 'blog/update_article.html'
+
+
+class DeleteArticleView(LoginRequiredMixin, DeleteView):
+    model = Article
+    template_name = 'blog/delete_article.html'
+    success_url = reverse_lazy('blog')
 
 
 def LikeView(request, slug):
