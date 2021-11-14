@@ -6,6 +6,7 @@ from django.urls import reverse, reverse_lazy
 
 from blog.models import Article
 from blog.forms import AddPostForm
+from blog.permissions import AdminAuthorPermissionMixin
 
 
 class BlogHomeView(ListView):
@@ -38,22 +39,25 @@ class ArticleDetail(DetailView):
 class AddArticleView(LoginRequiredMixin, CreateView):
     form_class = AddPostForm
     template_name = 'blog/add_article.html'
+    login_url = 'login'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
 
-class UpdateArticleView(LoginRequiredMixin, UpdateView):
+class UpdateArticleView(LoginRequiredMixin, AdminAuthorPermissionMixin, UpdateView):
     model = Article
     form_class = AddPostForm
     template_name = 'blog/update_article.html'
+    login_url = 'login'
 
 
-class DeleteArticleView(LoginRequiredMixin, DeleteView):
+class DeleteArticleView(LoginRequiredMixin, AdminAuthorPermissionMixin, DeleteView):
     model = Article
     template_name = 'blog/delete_article.html'
     success_url = reverse_lazy('blog')
+    login_url = 'login'
 
 
 def LikeView(request, slug):
