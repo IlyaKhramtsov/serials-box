@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
-from users.models import Contact
+from users.models import Contact, Profile
 
 from captcha.fields import CaptchaField, CaptchaTextInput
 
@@ -56,3 +56,17 @@ class ContactForm(forms.ModelForm):
             'message': forms.Textarea(attrs={'placeholder': 'Сообщение'}),
             'captcha': CaptchaTextInput(attrs={'placeholder': 'Captcha'})
         }
+
+
+class ChangeProfileForm(forms.ModelForm):
+    """Change profile information form."""
+    class Meta:
+        model = Profile
+        fields = ('photo', 'bio', 'birthday', 'city')
+
+
+class ChangeUserForm(forms.ModelForm):
+    """Change user information form."""
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
