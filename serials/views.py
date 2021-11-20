@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import DetailView, ListView, CreateView
+from django.http import HttpResponseRedirect
+from django.views.generic import DetailView, ListView, CreateView, View
 
 from serials.forms import CommentForm
 from serials.models import TVSeries, Crew
@@ -26,7 +27,7 @@ class SeriesDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = CommentForm()
+        context["comment_form"] = CommentForm()
         return context
 
 
@@ -73,3 +74,19 @@ class SearchView(ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')
         return TVSeries.objects.filter(title__icontains=query)
+
+
+class AddFavoriteView(View):
+    """Add series to favorites."""
+    def post(self, request, slug, *args, **kwargs):
+        series = TVSeries.objects.get(slug=request.POST.get('series_slug'))
+        series.favorite.add(request.user)
+        return HttpResponseRedirect(reverse('series_detail', args=[str(slug)]))
+
+
+class RemoveFavoriteView(View):
+    """Remove series from favorites."""
+    def post(self, request, slug, *args, **kwargs):
+        series = TVSeries.objects.get(slug=request.POST.get('series_slug'))
+        series.favorite.remove(request.user)
+        return HttpResponseRedirect(reverse('series_detail', args=[str(slug)]))

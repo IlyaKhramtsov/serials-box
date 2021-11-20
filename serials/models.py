@@ -17,6 +17,7 @@ class TVSeries(models.Model):
     actors = models.ManyToManyField('Crew', verbose_name="Актеры", related_name="series_actors")
     directors = models.ManyToManyField('Crew', verbose_name="Режиссеры", related_name="series_directors")
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
+    favorite = models.ManyToManyField(User, blank=True, verbose_name='Избранное', related_name='favorite')
     is_published = models.BooleanField(default=True, verbose_name="Публикация")
 
     class Meta:

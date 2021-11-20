@@ -1,5 +1,6 @@
 from django import template
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 
 from serials.models import Category, TVSeries
 
@@ -32,3 +33,9 @@ def activate_on(context, name):
     if context['request'].resolver_match.url_name == name:
         return 'active'
     return ''
+
+
+@register.simple_tag()
+def is_favorite(*args, **kwargs):
+    series = get_object_or_404(TVSeries, slug=kwargs['slug'])
+    return series.favorite.filter(id=kwargs['user_id']).exists()
