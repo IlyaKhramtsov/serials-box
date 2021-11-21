@@ -1,9 +1,7 @@
-from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-
 from blog.models import Article
 from blog.forms import AddPostForm
 from blog.permissions import AdminAuthorPermissionMixin
@@ -23,17 +21,6 @@ class ArticleDetail(DetailView):
     template_name = 'blog/article.html'
     slug_url_kwarg = 'article_slug'
     context_object_name = 'article'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        stuff = get_object_or_404(Article, slug=self.kwargs.get(self.slug_url_kwarg))
-        total_likes = stuff.total_likes()
-        liked = False
-        if stuff.likes.filter(id=self.request.user.id).exists():
-            liked = True
-        context['total_likes'] = total_likes
-        context['liked'] = liked
-        return context
 
 
 class AddArticleView(LoginRequiredMixin, CreateView):
@@ -60,13 +47,17 @@ class DeleteArticleView(LoginRequiredMixin, AdminAuthorPermissionMixin, DeleteVi
     login_url = 'login'
 
 
-def LikeView(request, slug):
-    article = get_object_or_404(Article, slug=request.POST.get('article_slug'))
-    liked = False
-    if article.likes.filter(id=request.user.id).exists():
-        article.likes.remove(request.user)
-        liked = False
-    else:
+class AddLikeView(View):
+    """Add a like to the article."""
+    def post(self, request, slug, *args, **kwargs):
+        article = Article.objects.get(slug=request.POST.get('article_slug'))
         article.likes.add(request.user)
-        liked = True
-    return HttpResponseRedirect(reverse('article_detail', args=[str(slug)]))
+        return HttpResponseRedirect(reverse('article_detail', args=[str(slug)]))
+
+
+class RemoveLikeView(View):
+    """Remove the like from the article."""
+    def post(self, request, slug, *args, **kwargs):
+        article = Article.objects.get(slug=request.POST.get('article_slug'))
+        article.likes.remove(request.user)
+        return HttpResponseRedirect(reverse('article_detail', args=[str(slug)]))
