@@ -1,5 +1,5 @@
 from django.shortcuts import redirect
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, ListView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
@@ -8,6 +8,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from users.forms import LoginUserForm, RegisterUserForm, ContactForm, ChangeUserForm, ChangeProfileForm
 from users.models import Contact, Profile
+from serials.models import TVSeries
 
 
 class UserRegisterView(CreateView):
@@ -64,7 +65,11 @@ class UserProfileView(DetailView):
     context_object_name = 'page_user'
 
     def get_queryset(self):
-        return Profile.objects.filter(id=self.kwargs['pk'])
+        return Profile.objects.filter(user=self.request.user)
+
+    def get_slug_field(self):
+        """Get the name of a slug field to be used to look up by slug."""
+        return 'user__username'
 
 
 class ProfileEditView(UpdateView):
@@ -74,3 +79,15 @@ class ProfileEditView(UpdateView):
     template_name = 'users/edit_profile.html'
     success_url = reverse_lazy('home')
 
+    def get_slug_field(self):
+        """Get the name of a slug field to be used to look up by slug."""
+        return 'user__username'
+
+
+class UserFavoriteSerials(ListView):
+    model = TVSeries
+    template_name = 'users/favorite.html'
+    context_object_name = 'user_favorites'
+
+    def get_queryset(self):
+        return TVSeries.objects.filter(favorite=self.request.user)
