@@ -10,3 +10,9 @@ register = template.Library()
 def is_liked(*args, **kwargs):
     article = get_object_or_404(Article, slug=kwargs['slug'])
     return article.likes.filter(id=kwargs['user_id']).exists()
+
+
+@register.simple_tag()
+def total_likes(*args, **kwargs):
+    article = get_object_or_404(Article, slug=kwargs['slug'])
+    return article.total_likes()
