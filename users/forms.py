@@ -63,6 +63,9 @@ class ChangeProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('photo', 'bio', 'birthday', 'city')
+        widgets = {
+            'birthday': forms.DateInput(attrs={'type': 'date'}),
+        }
 
 
 class ChangeUserForm(forms.ModelForm):
