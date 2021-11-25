@@ -3,6 +3,7 @@ from django.views.generic import CreateView, DetailView, UpdateView, ListView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 
@@ -23,12 +24,15 @@ class UserRegisterView(CreateView):
         return redirect('home')
 
 
-class UserEditView(UpdateView):
+class UserEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update user information."""
     model = User
     form_class = ChangeUserForm
     template_name = 'users/edit_user.html'
     success_url = reverse_lazy('home')
+
+    def test_func(self):
+        return self.get_object().id == self.request.user.id
 
 
 class LoginUser(LoginView):
@@ -72,7 +76,7 @@ class UserProfileView(DetailView):
         return 'user__username'
 
 
-class ProfileEditView(UpdateView):
+class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update user profile information."""
     model = Profile
     form_class = ChangeProfileForm
@@ -82,6 +86,9 @@ class ProfileEditView(UpdateView):
     def get_slug_field(self):
         """Get the name of a slug field to be used to look up by slug."""
         return 'user__username'
+
+    def test_func(self):
+        return self.get_object().user == self.request.user
 
 
 class UserFavoriteSerials(ListView):
