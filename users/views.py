@@ -10,6 +10,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from users.forms import LoginUserForm, RegisterUserForm, ContactForm, ChangeUserForm, ChangeProfileForm
 from users.models import Contact, Profile
 from serials.models import TVSeries
+from blog.models import Article
 
 
 class UserRegisterView(CreateView):
@@ -98,3 +99,12 @@ class UserFavoriteSerials(ListView):
 
     def get_queryset(self):
         return TVSeries.objects.filter(favorite=self.request.user)
+
+
+class UserLikedArticles(ListView):
+    model = Article
+    template_name = 'users/liked_articles.html'
+    context_object_name = 'user_likes'
+
+    def get_queryset(self):
+        return Article.objects.filter(likes=self.request.user)
