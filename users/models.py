@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+import datetime
+
 
 class Contact(models.Model):
     name = models.CharField(max_length=200, verbose_name='Имя')
@@ -36,6 +38,13 @@ class Profile(models.Model):
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
+
+    def get_age(self):
+        today = datetime.date.today()
+        return (today.year - self.birthday.year) - int(
+            (today.month, today.day) <
+            (self.birthday.month, self.birthday.day)
+        )
 
     def __str__(self):
         return str(self.user)
