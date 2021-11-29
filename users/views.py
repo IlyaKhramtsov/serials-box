@@ -1,16 +1,22 @@
-from django.shortcuts import redirect
-from django.views.generic import CreateView, DetailView, UpdateView, ListView
-from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout
-from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
-from users.forms import LoginUserForm, RegisterUserForm, ContactForm, ChangeUserForm, ChangeProfileForm
-from users.models import Contact, Profile
-from serials.models import TVSeries
 from blog.models import Article
+from serials.models import TVSeries
+from users.forms import (
+    ChangeProfileForm,
+    ChangeUserForm,
+    ContactForm,
+    LoginUserForm,
+    RegisterUserForm,
+)
+from users.models import Contact, Profile
 
 
 class UserRegisterView(CreateView):

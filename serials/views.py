@@ -1,10 +1,10 @@
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
-from django.views.generic import DetailView, ListView, CreateView, View
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from django.views.generic import CreateView, DetailView, ListView, View
 
 from serials.forms import CommentForm
-from serials.models import TVSeries, Crew
+from serials.models import Crew, TVSeries
 
 
 class SerialsHomeView(ListView):

@@ -1,6 +1,15 @@
 from django.urls import path
 
-from serials.views import CrewDetail, SearchView, SerialsHomeView, SerialsCategory, SeriesDetail, AddCommentView, AddFavoriteView, RemoveFavoriteView
+from serials.views import (
+    AddCommentView,
+    AddFavoriteView,
+    CrewDetail,
+    RemoveFavoriteView,
+    SearchView,
+    SerialsCategory,
+    SerialsHomeView,
+    SeriesDetail,
+)
 
 urlpatterns = [
     path('', SerialsHomeView.as_view(), name='home'),

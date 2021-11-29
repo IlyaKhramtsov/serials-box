@@ -2,9 +2,9 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
-from users.models import Contact, Profile
-
 from captcha.fields import CaptchaField, CaptchaTextInput
+
+from users.models import Contact, Profile
 
 
 class RegisterUserForm(UserCreationForm):

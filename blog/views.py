@@ -1,9 +1,17 @@
-from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from blog.models import Article
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+    View,
+)
+
 from blog.forms import AddPostForm
+from blog.models import Article
 from blog.permissions import AdminAuthorPermissionMixin
 
 
