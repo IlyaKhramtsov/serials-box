@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load embed_video_tags %}
+
+{% block title %}Сериалы{% endblock title %}
+
+{% block content %}
+
+{% if messages %}
+     {% for message in messages %}
+         <div class="text-center alert alert-{{ message.tags }}">
+             {{ message|safe }}
+         </div>
+     {% endfor %}
+{% endif %}
+
+{% include 'serials/includes/banner.html' %}
+
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="trending__product">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="section-title">
+                                <h4>Все сериалы</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {% for series in serials %}
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="{{series.poster.url}}">
+                                    <div class="comment"><i class="fa fa-comments"></i> {{ series.comments.count }}</div>
+                                </div>
+                                <div class="product__item__text">
+                                    <ul>
+                                        <li>{{ series.category }}</li>
+                                    </ul>
+                                    <h5><a href="{{ series.get_absolute_url }}">{{ series.title }}</a></h5>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% include 'includes/paginator.html' %}
+                </div>
+            </div>
+            {% include 'serials/includes/sidebar.html' %}
+        </div>
+    </div>
+</section>
+{% endblock %}

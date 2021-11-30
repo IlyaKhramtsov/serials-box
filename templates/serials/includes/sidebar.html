@@ -1,0 +1,18 @@
+{% load serials_tags %}
+
+<div class="col-lg-4 col-md-6 col-sm-8">
+    <div class="product__sidebar">
+        <div class="product__sidebar__view">
+            <div class="section-title">
+                <h5>Недавно добавленные сериалы</h5>
+            </div>
+            {% show_last_serials 2 %}
+        </div>
+        <div class="product__sidebar__comment">
+            <div class="section-title">
+                <h5>Самые обсуждаемые сериалы</h5>
+            </div>
+            {% get_most_commented_serials 3 %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+{% for series in last_serials %}
+<div class="filter__gallery">
+    <div class="product__sidebar__view__item set-bg mix day years"
+         data-setbg="{{ series.poster.url }}">
+        <h5><a href="{{ series.get_absolute_url }}">{{ series.title }}</a></h5>
+    </div>
+</div>
+{% endfor %}
+
+
