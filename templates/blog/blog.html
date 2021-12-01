@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Блог{% endblock title %}
+
+{% block content %}
+{% include 'blog/includes/breadcrumb.html' %}
+    <!-- Blog Section Begin -->
+    <section class="blog spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                      {% for article in articles %}
+                        <div class="col-lg-6">
+                            <div class="blog__item set-bg" data-setbg="{{article.photo.url}}">
+                                <div class="blog__item__text">
+                                    <p><span class="far fa-calendar-alt"></span>{{ article.time_create }}</p>
+                                    <h4><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h4>
+                                </div>
+                            </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Blog Section End -->
+{% endblock %}
