@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ flatpage.title }}{% endblock title %}
+
+{% block content %}
+
+<section class="anime-details spad">
+    <div class="container">
+        <div class="anime__details__content">
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="anime__details__text">
+                        <div class="anime__details__title">
+                            <h3>{{ flatpage.title }}</h3>
+                        </div>
+                        <p>{{ flatpage.content|linebreaks }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
