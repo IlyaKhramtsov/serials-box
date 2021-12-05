@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход{% endblock title %}
+
+{% block content %}
+<!-- Login Section Begin -->
+<section class="login spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="login__form">
+                    <h3>Авторизация</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="input__item">
+                            {{ form.username }}
+                            <span class="fas fa-user"></span>
+                        </div>
+                        <div class="input__item">
+                            {{ form.password }}
+                            <span class="fas fa-lock"></span>
+                        </div>
+                        <button type="submit" class="site-btn">Войти</button>
+                    </form>
+                    <a href="#" class="forget_pass">Забыли пароль?</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="login__register">
+                    <h3>У вас нет аккаунта?</h3>
+                    <a href="{% url 'register' %}" class="primary-btn">Регистрация</a>
+                </div>
+            </div>
+        </div>
+        <div class="login__social">
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-6">
+                    <div class="login__social__links">
+                        <span>или</span>
+                        <ul>
+                            <li><a href="#" class="github"><i class="fab fa-github"></i> Войти с помощью GitHub</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Login Section End -->
+{% endblock %}
