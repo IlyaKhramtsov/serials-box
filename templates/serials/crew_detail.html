@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ crew.name }}{% endblock title %}
+
+{% block content %}
+
+<section class="anime-details spad" xmlns="http://www.w3.org/1999/html">
+    <div class="container">
+        <div class="anime__details__content">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="anime__details__pic set-bg" data-setbg="{{crew.photo.url}}"></div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="anime__details__text">
+                        <div class="anime__details__title">
+                            <h3>{{ crew.name }}</h3>
+                        </div>
+                        <p>{{ crew.description|linebreaks }}</p>
+                        <!-- Сериалы в которых участвовал как актер -->
+                        {% for actor in crew.series_actors.all %}
+                            {{ actor.title }}
+                        {% endfor %}
+                        <!-- Конец -->
+
+                        <!-- Сериалы в которых участвовал как режиссер -->
+                        {% for director in crew.series_directors.all %}
+                            {{ director.title }}
+                        {% endfor %}
+                        <!-- Конец -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
