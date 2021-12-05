@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load embed_video_tags %}
+{% load serials_tags %}
+{% load static %}
+
+{% block title %}{{ series.title }}{% endblock title %}
+
+{% block content %}
+
+<section class="anime-details spad" xmlns="http://www.w3.org/1999/html">
+        <div class="container">
+            <div class="anime__details__content">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="anime__details__pic set-bg" data-setbg="{{series.poster.url}}">
+                            <div class="comment"><i class="fa fa-comments"></i> 11</div>
+                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="anime__details__text">
+                            <div class="anime__details__title">
+                                <h3>{{ series.title }}</h3>
+                            </div>
+                            <p>{{ series.description|linebreaks }}</p>
+                            <div class="anime__details__widget">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <ul>
+                                            <li><span>Год выхода:</span>{{ series.year }}</li>
+                                            <li><span>Жанры:</span>{{ series.genres.all|safeseq|join:", " }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <ul>
+                                            <li><span>Scores:</span> 7.31 / 1,515</li>
+                                            <li><span>Rating:</span> 8.5 / 161 times</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="anime__details__btn">
+                                {% is_favorite slug=series.slug user_id=user.id as is_user_favorite %}
+                                {% if not is_user_favorite %}
+                                    <form action="{% url 'add_favorite' series.slug %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" name="series_slug" value="{{ series.slug }}"
+                                                class="btn btn-danger">Добавить в избранное</button>
+                                    </form>
+                                {% else %}
+                                    <form action="{% url 'remove_favorite' series.slug %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" name="series_slug" value="{{ series.slug }}"
+                                                class="btn btn-danger">Убрать из избранного</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8">
+                        <div class="anime__details__review">
+                            <div class="section-title">
+                                <h5>Трейлер</h5>
+                            </div>
+                            <div class="col-lg-12">
+                            <div class="anime__video__player">
+                                {% video series.trailer '500x300' %}
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                <div class="col-lg-8">
+                    <div class="trending__product">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="section-title">
+                                    <h5>Актеры</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for actor in series.actors.all %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{actor.photo.url}}"></div>
+                                    <div class="product__item__text">
+                                        <h5><a href="{{ actor.get_absolute_url }}">{{ actor.name }}</a></h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="row">
+                <div class="col-lg-8">
+                    <div class="trending__product">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="section-title">
+                                    <h5>Режиссеры</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for director in series.directors.all %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{director.photo.url}}"></div>
+                                    <div class="product__item__text">
+                                        <h5><a href="{{ director.get_absolute_url }}">{{ director.name }}</a></h5>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8">
+                        <div class="anime__details__review">
+                            <div class="section-title">
+                                <h5>Отзывы</h5>
+                            </div>
+                            {% for comment in series.comments.all %}
+                            <div class="anime__review__item">
+                                <div class="anime__review__item__pic">
+                                    <img src="{{ comment.author.profile.photo.url }}" alt="">
+                                </div>
+                                <div class="anime__review__item__text">
+                                    <h6>{{ comment.author.username }} - <span>{{ comment.created }}</span></h6>
+                                    <p> {{ comment.text }}</p>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p>Пока еще нет комментариев.</p>
+                            {% endfor %}
+                        </div>
+                        <div class="anime__details__form">
+                            <div class="section-title">
+                                <h5>Ваш комментарий</h5>
+                            </div>
+                            <form action="{% url 'add_comment' series.id %}" method="post">
+                                {% csrf_token %}
+                                {{comment_form}}
+                                <button type="submit"><i class="fa fa-location-arrow"></i> Отправить</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
