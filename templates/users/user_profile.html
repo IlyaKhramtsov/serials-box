@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user.username }}{% endblock title %}
+
+{% block content %}
+<section class="anime-details spad">
+    <div class="container">
+        <div class="anime__details__content">
+            <div class="row">
+                <div class="col-lg-3">
+                    {% if page_user.user.profile.photo %}
+                        <div class="anime__details__pic set-bg" data-setbg="{{ page_user.user.profile.photo.url }}"></div>
+                    {% endif %}
+                </div>
+                <div class="col-lg-9">
+                    <div class="anime__details__text">
+                        <div class="anime__details__title">
+                            <h3>{{ page_user.user.username }}</h3>
+                        </div>
+                        <p>{{ page_user.user.profile.bio }}</p>
+                        <div class="anime__details__widget">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6">
+                                    <ul>
+                                        <li><span>Имя</span> {{ page_user.user.first_name }}</li>
+                                        <li><span>Фамилия</span> {{ page_user.user.last_name }}</li>
+                                        <li><span>Город</span> </li>
+                                        {% if page_user.birthday %}
+                                            <li><span>Возраст</span> {{ page_user.get_age }}</li>
+                                        {% endif %}
+                                        <li><span>email</span> {{ page_user.user.email }}</li>
+                                        <li><span>Регистрация:</span> {{ page_user.user.date_joined }}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <ul>
+                                        <li><a href="{% url 'favorites' %}">Избранное</a></li>
+                                        <li><a href="{% url 'liked_articles' %}">Понравившиеся статьи</a></li>
+                                        <li><a href="{% url 'edit_profile' user.username %}">Редактировать профиль</a></li>
+                                        <li><a href="{% url 'edit_user' user.id %}">Редактировать пользовательские данные</a></li>
+                                        <li><a href="{% url 'add_article' %}">Добавить статью в блоге</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
