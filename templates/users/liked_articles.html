@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Понравившиеся статьи{% endblock title %}
+
+{% block content %}
+<div class="container"><br>
+    <div class="row">
+        <div class="col">
+            <div class="section-title">
+                <h4>Понравившиеся статьи</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    {% for like in user_likes %}
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="product__item">
+                <div class="product__item__pic set-bg" data-setbg="{{ like.photo.url }}"></div>
+                <div class="product__item__text">
+                    <h5><a href="{{ like.get_absolute_url }}">{{ like.title }}</a></h5>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
