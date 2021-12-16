@@ -8,18 +8,18 @@ class ArticleModelTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        new_user = get_user_model().objects.create_user(
+        cls.new_user = get_user_model().objects.create_user(
             'test_user', 'username@mail.com')
         cls.article = Article.objects.create(
             title='New post',
             slug='new-post',
             content='Test new post content.',
-            author=new_user,
+            author=cls.new_user,
         )
-        cls.article.likes.set([new_user])
+        cls.article.likes.set([cls.new_user])
 
-    def test_article_str(self):
-        self.assertEqual(str(self.article), 'New post')
+    def test_article_str_is_equal_to_title(self):
+        self.assertEqual(self.article.__str__(), self.article.title)
 
     def test_get_absolute_url(self):
         self.assertEqual(self.article.get_absolute_url(), '/blog/article/new-post/')
@@ -27,3 +27,5 @@ class ArticleModelTest(TestCase):
     def test_total_likes(self):
         self.assertEqual(self.article.total_likes(), 1)
 
+    def test_user_liked_article(self):
+        self.assertIn(self.new_user, self.article.likes.all())
