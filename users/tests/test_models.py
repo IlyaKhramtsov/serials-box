@@ -33,7 +33,7 @@ class ProfileModelTest(TestCase):
         when an instance of the user class is created.
         """
         self.assertEqual(self.new_user.profile, Profile.objects.get(user=self.new_user))
-        self.assertTrue(isinstance(self.new_user.profile, Profile))
+        self.assertIsInstance(self.new_user.profile, Profile)
         self.assertEqual(Profile.objects.count(), 1)
 
     def test_user_age(self):
