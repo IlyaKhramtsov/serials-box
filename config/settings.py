@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 
 import environ
@@ -158,3 +159,6 @@ INTERNAL_IPS = [
 ]
 
 SITE_ID = 1
+
+if 'test' in sys.argv:
+    CAPTCHA_TEST_MODE = True
