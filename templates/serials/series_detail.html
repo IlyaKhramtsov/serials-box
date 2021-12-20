@@ -131,7 +131,11 @@
                             {% for comment in series.comments.all %}
                             <div class="anime__review__item">
                                 <div class="anime__review__item__pic">
+                                    {% if comment.author.profile.photo %}
                                     <img src="{{ comment.author.profile.photo.url }}" alt="">
+                                    {% else %}
+                                    <img src="{% static 'serials/images/avatar.png' %}" alt="">
+                                    {% endif %}
                                 </div>
                                 <div class="anime__review__item__text">
                                     <h6>{{ comment.author.username }} - <span>{{ comment.created }}</span></h6>
