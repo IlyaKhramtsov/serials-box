@@ -93,3 +93,14 @@ class SerialsDetailTest(TestCase):
         response = self.client.get(self.series.get_absolute_url())
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test comment')
+
+    def test_redirect_to_series_after_successfully_adding_comment(self):
+        author = self.client.login(username='test_user', password='12345')
+        url = reverse('add_comment', kwargs={'pk': self.series.pk})
+        response = self.client.post(url, data={
+            'series': self.series,
+            'author': author,
+            'text': 'New comment'
+        }, follow=True)
+        self.assertRedirects(response, self.series.get_absolute_url())
+        self.assertContains(response, 'New comment')
