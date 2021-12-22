@@ -64,12 +64,12 @@ class SerialsDetailTest(TestCase):
         )
         poster = SimpleUploadedFile('series_image.jpg', content=b'', content_type='image/jpg')
         cls.series = TVSeries.objects.create(
-            title=f'Test series',
-            description=f'Test series description',
+            title='Test series',
+            description='Test series description',
             poster=poster,
             category=category,
             year=2001,
-            slug=f'test-series'
+            slug='test-series'
         )
         cls.user = User.objects.create_user(
             username='test_user',
@@ -104,3 +104,21 @@ class SerialsDetailTest(TestCase):
         }, follow=True)
         self.assertRedirects(response, self.series.get_absolute_url())
         self.assertContains(response, 'New comment')
+
+    def test_redirect_to_series_after_successfully_adding_to_favorites(self):
+        self.client.login(username='test_user', password='12345')
+        url = reverse('add_favorite', kwargs={'slug': self.series.slug})
+        response = self.client.post(url, data={
+            'series_slug': self.series.slug,
+        }, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, self.series.get_absolute_url())
+
+    def test_redirect_to_series_after_removing_from_favorites(self):
+        self.client.login(username='test_user', password='12345')
+        url = reverse('remove_favorite', kwargs={'slug': self.series.slug})
+        response = self.client.post(url, data={
+            'series_slug': self.series.slug,
+        }, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, self.series.get_absolute_url())
