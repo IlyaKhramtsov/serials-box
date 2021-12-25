@@ -68,6 +68,7 @@ class ArticleDetailTest(TestCase):
         response = self.client.post(url, data={
             'article_slug': self.article.slug,
         }, follow=True)
+
         self.assertEqual(response.status_code, 200)
         self.assertRedirects(response, self.article.get_absolute_url())
 
@@ -77,5 +78,49 @@ class ArticleDetailTest(TestCase):
         response = self.client.post(url, data={
             'article_slug': self.article.slug,
         }, follow=True)
+
         self.assertEqual(response.status_code, 200)
         self.assertRedirects(response, self.article.get_absolute_url())
+
+
+class AddArticleTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.author = User.objects.create_user(username='user1', password='12345')
+
+    def test_view_url_exists_at_desired_location(self):
+        self.client.force_login(self.author)
+        response = self.client.get('/blog/add_article/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.force_login(self.author)
+        response = self.client.get(reverse('add_article'))
+
+        self.assertTemplateUsed(response, 'blog/add_article.html')
+
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('add_article'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/users/login/'))
+
+    def test_add_article(self):
+        self.client.force_login(self.author)
+        data = {
+            'title': 'New article',
+            'slug': 'new-article',
+            'content': 'New article description.'
+        }
+        photo = {
+            'photo': SimpleUploadedFile(
+                'article_image.jpg',
+                content=open('static/serials/images/avatar.png', 'rb').read(),
+                content_type='image/jpg')
+        }
+        self.client.post(reverse('add_article'), data={**data, **photo})
+
+        self.assertEqual(Article.objects.count(), 1)
+        self.assertEqual(Article.objects.last().title, 'New article')
