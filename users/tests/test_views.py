@@ -58,6 +58,14 @@ class UserEditViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/users/login/'))
 
+    def test_authenticated_user_but_not_owner_can_not_see_page(self):
+        not_owner = User.objects.create_user('test_user', 'strongpassword')
+        self.client.force_login(user=not_owner)
+        url = reverse('edit_user', kwargs={'pk': self.user.pk})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 403)
+
     def test_update_user_credentials(self):
         self.client.force_login(self.user)
         data = {
