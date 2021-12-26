@@ -39,7 +39,7 @@ class UserEditViewTest(TestCase):
 
     def test_view_url_exists_at_desired_location(self):
         self.client.force_login(self.user)
-        response = self.client.get('/users/edit_user/1/')
+        response = self.client.get(f'/users/edit_user/{self.user.pk}/')
 
         self.assertEqual(response.status_code, 200)
 
@@ -71,3 +71,31 @@ class UserEditViewTest(TestCase):
         self.assertEqual(User.objects.last().username, 'upd_username')
         self.assertEqual(User.objects.last().first_name, 'John')
         self.assertRedirects(response, reverse('home'))
+
+
+class LoginUserTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username='user1', password='12345')
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/users/login/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('login'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/login.html')
+
+    def test_login_user(self):
+        data = {
+            'username': 'user1',
+            'password': '12345',
+        }
+        response = self.client.post(reverse('login'), data=data, follow=True)
+
+        self.assertRedirects(response, reverse('home'))
+        self.assertTrue(response.context['user'].is_active)
