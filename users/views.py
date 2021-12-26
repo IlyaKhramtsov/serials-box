@@ -37,6 +37,7 @@ class UserEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = ChangeUserForm
     template_name = 'users/edit_user.html'
     success_url = reverse_lazy('home')
+    login_url = 'login'
 
     def test_func(self):
         return self.get_object().id == self.request.user.id
