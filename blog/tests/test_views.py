@@ -171,3 +171,58 @@ class DeleteArticleTest(TestCase):
 
         self.assertEquals(Article.objects.count(), 0)
         self.assertRedirects(response, reverse('blog'), status_code=302)
+
+
+class ArticleUpdateTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.author = User.objects.create_user(username='user1', password='12345')
+        photo = SimpleUploadedFile(
+            'article_image.jpg',
+            content=open('static/serials/images/avatar.png', 'rb').read(),
+            content_type='image/jpg'
+        )
+        cls.article = Article.objects.create(
+            title='Test article',
+            slug='test-article',
+            content='Test article description',
+            photo=photo,
+            author=cls.author
+        )
+
+    def test_view_url_exists_at_desired_location(self):
+        self.client.force_login(self.author)
+        response = self.client.get('/blog/article/edit/test-article/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.force_login(self.author)
+        url = reverse('update_article', kwargs={'slug': self.article.slug})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'blog/update_article.html')
+
+    def test_redirect_if_not_logged_in(self):
+        url = reverse('update_article', kwargs={'slug': self.article.slug})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/users/login/'))
+
+    def test_update_article_content(self):
+        self.client.force_login(self.author)
+        data = {
+            'title': self.article.title,
+            'slug': self.article.slug,
+            'content': 'updated content',
+            'photo': self.article.photo
+        }
+        url = reverse('update_article', kwargs={'slug': self.article.slug})
+        response = self.client.post(url, data=data)
+
+        self.assertEquals(Article.objects.count(), 1)
+        self.assertEqual(Article.objects.last().content, 'updated content')
+        self.assertRedirects(response, self.article.get_absolute_url())
