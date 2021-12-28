@@ -107,3 +107,29 @@ class LoginUserTest(TestCase):
 
         self.assertRedirects(response, reverse('home'))
         self.assertTrue(response.context['user'].is_active)
+
+
+class UserProfileViewTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username='user1', password='12345')
+
+    def test_view_url_exists_at_desired_location(self):
+        self.client.force_login(self.user)
+        response = self.client.get(f'/users/profile/{self.user.username}/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        self.client.force_login(self.user)
+        url = reverse('profile', kwargs={'slug': self.user.username})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.force_login(self.user)
+        url = reverse('profile', kwargs={'slug': self.user.username})
+        response = self.client.get(url)
+
+        self.assertTemplateUsed(response, 'users/user_profile.html')
