@@ -43,6 +43,13 @@ class UserEditViewTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_view_url_accessible_by_name(self):
+        self.client.force_login(self.user)
+        url = reverse('edit_user', kwargs={'pk': self.user.pk})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
     def test_view_uses_correct_template(self):
         self.client.force_login(self.user)
         url = reverse('edit_user', kwargs={'pk': self.user.pk})
@@ -89,6 +96,11 @@ class LoginUserTest(TestCase):
 
     def test_view_url_exists_at_desired_location(self):
         response = self.client.get('/users/login/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('login'))
 
         self.assertEqual(response.status_code, 200)
 
