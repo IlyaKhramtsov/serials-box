@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from users.models import Profile
+from users.models import Contact, Profile
 
 
 class UserRegisterViewTests(TestCase):
@@ -191,3 +191,37 @@ class ProfileEditViewTest(TestCase):
         self.assertEqual(profile.birthday, datetime.date(2020, 1, 1))
         self.assertEqual(profile.city, 'Moscow')
         self.assertRedirects(response, reverse('home'))
+
+
+class ContactFormViewTest(TestCase):
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/users/contact/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('contact'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('contact'))
+
+        self.assertTemplateUsed(response, 'users/contact.html')
+
+    def test_can_send_message(self):
+        data = {
+            'name': 'John',
+            'email': 'johnsmith@example.com',
+            'message': 'test message',
+            'captcha_0': 'dummy-value',
+            'captcha_1': 'PASSED'
+        }
+        response = self.client.post(reverse('contact'), data=data, follow=True)
+
+        self.assertEqual(Contact.objects.count(), 1)
+        self.assertEqual(Contact.objects.last().message, 'test message')
+        self.assertRedirects(response, reverse('home'))
+        # Check that response has success message
+        self.assertContains(response, 'success')
+        self.assertContains(response, 'Форма успешно отправлена!')
