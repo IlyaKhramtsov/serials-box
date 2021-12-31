@@ -1,6 +1,10 @@
+import datetime
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+
+from users.models import Profile
 
 
 class UserRegisterViewTests(TestCase):
@@ -82,7 +86,7 @@ class UserEditViewTest(TestCase):
         url = reverse('edit_user', kwargs={'pk': self.user.pk})
         response = self.client.post(url, data=data)
 
-        self.assertEquals(User.objects.count(), 1)
+        self.assertEqual(User.objects.count(), 1)
         self.assertEqual(User.objects.last().username, 'upd_username')
         self.assertEqual(User.objects.last().first_name, 'John')
         self.assertRedirects(response, reverse('home'))
@@ -145,3 +149,45 @@ class UserProfileViewTest(TestCase):
         response = self.client.get(url)
 
         self.assertTemplateUsed(response, 'users/user_profile.html')
+
+
+class ProfileEditViewTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username='user1', password='12345')
+
+    def test_view_url_exists_at_desired_location(self):
+        self.client.force_login(self.user)
+        response = self.client.get(f'/users/edit_profile/{self.user.username}/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        self.client.force_login(self.user)
+        url = reverse('edit_profile', kwargs={'slug': self.user.username})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.force_login(self.user)
+        url = reverse('edit_profile', kwargs={'slug': self.user.username})
+        response = self.client.get(url)
+
+        self.assertTemplateUsed(response, 'users/edit_profile.html')
+
+    def test_update_user_profile(self):
+        self.client.force_login(self.user)
+        profile = Profile.objects.get(user=self.user)
+        data = {
+            'birthday': '2020-01-01',
+            'city': 'Moscow'
+        }
+        url = reverse('edit_profile', kwargs={'slug': self.user.username})
+        response = self.client.post(url, data=data)
+        profile.refresh_from_db()
+
+        self.assertEqual(Profile.objects.count(), 1)
+        self.assertEqual(profile.birthday, datetime.date(2020, 1, 1))
+        self.assertEqual(profile.city, 'Moscow')
+        self.assertRedirects(response, reverse('home'))
