@@ -1,9 +1,11 @@
 import datetime
 
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 
+from serials.models import Category, TVSeries
 from users.models import Contact, Profile
 
 
@@ -225,3 +227,60 @@ class ContactFormViewTest(TestCase):
         # Check that response has success message
         self.assertContains(response, 'success')
         self.assertContains(response, 'Форма успешно отправлена!')
+
+
+class UserFavoriteSerialsTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        category = Category.objects.create(
+            name='test category',
+            slug='test-category'
+        )
+        poster = SimpleUploadedFile(
+            'series_image.jpg',
+            content=b'',
+            content_type='image/jpg'
+        )
+        cls.series = TVSeries.objects.create(
+            title='Test series',
+            description='Test series description',
+            poster=poster,
+            category=category,
+            year=2001,
+            slug='test-series'
+        )
+        cls.user = User.objects.create_user(username='user1', password='12345')
+
+    def test_view_url_exists_at_desired_location(self):
+        self.client.force_login(self.user)
+        response = self.client.get('/users/favorites/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('favorites'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('favorites'))
+
+        self.assertTemplateUsed(response, 'users/favorite.html')
+
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('favorites'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/users/login/'))
+
+    def test_user_has_serials_in_favorites(self):
+        self.client.force_login(self.user)
+        self.user.favorite.add(self.series)
+        response = self.client.get(reverse('favorites'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.series.favorite.count(), 1)
+        self.assertEqual(self.user.favorite.get(title='Test series'), self.series)
