@@ -99,19 +99,21 @@ class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.get_object().user == self.request.user
 
 
-class UserFavoriteSerials(ListView):
+class UserFavoriteSerials(LoginRequiredMixin, ListView):
     model = TVSeries
     template_name = 'users/favorite.html'
     context_object_name = 'user_favorites'
+    login_url = 'login'
 
     def get_queryset(self):
         return TVSeries.objects.filter(favorite=self.request.user)
 
 
-class UserLikedArticles(ListView):
+class UserLikedArticles(LoginRequiredMixin, ListView):
     model = Article
     template_name = 'users/liked_articles.html'
     context_object_name = 'user_likes'
+    login_url = 'login'
 
     def get_queryset(self):
         return Article.objects.filter(likes=self.request.user)
