@@ -128,6 +128,31 @@ class LoginUserTest(TestCase):
         self.assertTrue(response.context['user'].is_active)
 
 
+class LogoutUserTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username='user1', password='12345')
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/users/logout/')
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('logout'))
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_login_user(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('logout'), follow=True)
+
+        self.assertRedirects(response, reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['user'].is_active)
+
+
 class UserProfileViewTest(TestCase):
 
     @classmethod
