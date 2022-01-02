@@ -5,6 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 
+from blog.models import Article
 from serials.models import Category, TVSeries
 from users.models import Contact, Profile
 
@@ -284,3 +285,52 @@ class UserFavoriteSerialsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.series.favorite.count(), 1)
         self.assertEqual(self.user.favorite.get(title='Test series'), self.series)
+
+
+class UserLikedArticlesTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        author = User.objects.create_user(username='articles_author', password='12345')
+        photo = SimpleUploadedFile('article_image.jpg', content=b'', content_type='image/jpg')
+        cls.article = Article.objects.create(
+            title='Test article',
+            slug='test-article',
+            content='Test article description',
+            photo=photo,
+            author=author
+        )
+        cls.user = User.objects.create_user(username='user1', password='12345')
+
+    def test_view_url_exists_at_desired_location(self):
+        self.client.force_login(self.user)
+        response = self.client.get('/users/likes/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('liked_articles'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('liked_articles'))
+
+        self.assertTemplateUsed(response, 'users/liked_articles.html')
+
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('liked_articles'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith('/users/login/'))
+
+    def test_user_has_liked_articles(self):
+        self.client.force_login(self.user)
+        self.user.blog_articles.add(self.article)
+        response = self.client.get(reverse('liked_articles'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.article.likes.count(), 1)
+        self.assertEqual(self.user.blog_articles.get(title='Test article'), self.article)
