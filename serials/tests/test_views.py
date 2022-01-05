@@ -122,3 +122,95 @@ class SerialsDetailTest(TestCase):
         }, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertRedirects(response, self.series.get_absolute_url())
+
+
+class SerialsCategoryTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.category = Category.objects.create(
+            name='test category',
+            slug='test-category'
+        )
+        poster = SimpleUploadedFile('series_image.jpg', content=b'', content_type='image/jpg')
+        number_of_serials = 10
+        for series_num in range(number_of_serials):
+            TVSeries.objects.create(
+                title=f'Test{series_num}',
+                description=f'Test{series_num} description',
+                poster=poster,
+                category=cls.category,
+                year=2001,
+                slug=f'test{series_num}'
+            )
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/category/test-category/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        url = reverse('category', kwargs={'category_slug': self.category.slug})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(self.category.get_absolute_url())
+        self.assertTemplateUsed(response, 'serials/index.html')
+
+    def test_pagination_is_six(self):
+        response = self.client.get(self.category.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        self.assertTrue(response.context['is_paginated'])
+        self.assertEqual(response.context['serials'].count(), 6)
+
+    def test_next_page_pagination(self):
+        """Test second page and confirm it has (exactly) remaining 4 items"""
+        response = self.client.get(self.category.get_absolute_url() + '?page=2')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        self.assertTrue(response.context['is_paginated'])
+        self.assertEqual(response.context['serials'].count(), 4)
+
+
+class SearchViewTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        category = Category.objects.create(
+            name='test category',
+            slug='test-category'
+        )
+        poster = SimpleUploadedFile('series_image.jpg', content=b'', content_type='image/jpg')
+        TVSeries.objects.create(
+            title='First series',
+            category=category,
+            poster=poster,
+            slug='first-category'
+        )
+        TVSeries.objects.create(
+            title='Second series',
+            category=category,
+            poster=poster,
+            slug='second-category'
+        )
+
+    def test_search_first_series(self):
+        value = 'first'
+        response = self.client.get(reverse('search'), {'q': value})
+        qs = TVSeries.objects.filter(title='First series')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'serials/index.html')
+        self.assertEqual(response.context['serials'].count(), 1)
+        self.assertQuerysetEqual(response.context['serials'], qs)
+
+    def test_search_serials(self):
+        value = 'series'
+        response = self.client.get(reverse('search'), {'q': value})
+        qs = TVSeries.objects.all()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'serials/index.html')
+        self.assertEqual(response.context['serials'].count(), 2)
+        self.assertQuerysetEqual(response.context['serials'], qs)
