@@ -164,12 +164,29 @@ class DeleteArticleTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/users/login/'))
 
-    def test_delete_article(self):
+    def test_not_author_or_admin_cannot_see_the_page(self):
+        user = User.objects.create_user(username='user2', password='13246')
+        self.client.force_login(user)
+        url = reverse('delete_article', kwargs={'slug': self.article.slug})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_article_by_author(self):
         self.client.force_login(self.author)
         url = reverse('delete_article', kwargs={'slug': self.article.slug})
         response = self.client.delete(url)
 
-        self.assertEquals(Article.objects.count(), 0)
+        self.assertEqual(Article.objects.count(), 0)
+        self.assertRedirects(response, reverse('blog'), status_code=302)
+
+    def test_delete_article_by_admin(self):
+        admin = User.objects.create_superuser(username='admin', password='54321')
+        self.client.force_login(admin)
+        url = reverse('delete_article', kwargs={'slug': self.article.slug})
+        response = self.client.delete(url)
+
+        self.assertEqual(Article.objects.count(), 0)
         self.assertRedirects(response, reverse('blog'), status_code=302)
 
 
@@ -212,7 +229,15 @@ class ArticleUpdateTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith('/users/login/'))
 
-    def test_update_article_content(self):
+    def test_not_author_or_admin_cannot_see_the_page(self):
+        user = User.objects.create_user(username='user2', password='13246')
+        self.client.force_login(user)
+        url = reverse('update_article', kwargs={'slug': self.article.slug})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_update_article_content_by_author(self):
         self.client.force_login(self.author)
         data = {
             'title': self.article.title,
@@ -223,6 +248,22 @@ class ArticleUpdateTest(TestCase):
         url = reverse('update_article', kwargs={'slug': self.article.slug})
         response = self.client.post(url, data=data)
 
-        self.assertEquals(Article.objects.count(), 1)
+        self.assertEqual(Article.objects.count(), 1)
         self.assertEqual(Article.objects.last().content, 'updated content')
+        self.assertRedirects(response, self.article.get_absolute_url())
+
+    def test_update_article_content_by_admin(self):
+        admin = User.objects.create_superuser(username='admin', password='54321')
+        self.client.force_login(admin)
+        data = {
+            'title': self.article.title,
+            'slug': self.article.slug,
+            'content': 'updated content by admin',
+            'photo': self.article.photo
+        }
+        url = reverse('update_article', kwargs={'slug': self.article.slug})
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(Article.objects.count(), 1)
+        self.assertEqual(Article.objects.last().content, 'updated content by admin')
         self.assertRedirects(response, self.article.get_absolute_url())
