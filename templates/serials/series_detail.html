@@ -138,7 +138,9 @@
                                     {% endif %}
                                 </div>
                                 <div class="anime__review__item__text">
-                                    <h6>{{ comment.author.username }} - <span>{{ comment.created }}</span></h6>
+                                    <a href="{% url 'profile' comment.author.username %}">
+                                        <h6>{{ comment.author.username }} - <span>{{ comment.created }}</span></h6>
+                                    </a>
                                     <p> {{ comment.text }}</p>
                                 </div>
                             </div>
