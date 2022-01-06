@@ -76,9 +76,6 @@ class UserProfileView(DetailView):
     template_name = 'users/user_profile.html'
     context_object_name = 'page_user'
 
-    def get_queryset(self):
-        return Profile.objects.filter(user=self.request.user)
-
     def get_slug_field(self):
         """Get the name of a slug field to be used to look up by slug."""
         return 'user__username'
