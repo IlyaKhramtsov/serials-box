@@ -17,6 +17,6 @@ test-coverage-report: test
 	@poetry run coverage report
 
 test-coverage-report-html: test
-	@poetry run coverage xml
+	@poetry run coverage html
 
 .PHONY: install shell start test
