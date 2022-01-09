@@ -23,7 +23,12 @@ def show_last_serials(count=5):
 @register.inclusion_tag('serials/tags/most_commented_serials.html')
 def get_most_commented_serials(count=5):
     """Show the most commented serials."""
-    serials = TVSeries.objects.annotate(total_comments=Count('comments')).order_by('-total_comments')[:count]
+    serials = (
+        TVSeries.objects
+        .annotate(total_comments=Count('comments'))
+        .select_related('category')
+        .order_by('-total_comments')[:count]
+    )
     return {'most_commented_serials': serials}
 
 
