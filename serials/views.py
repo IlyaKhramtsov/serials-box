@@ -15,7 +15,12 @@ class SerialsHomeView(ListView):
     context_object_name = 'serials'
 
     def get_queryset(self):
-        return TVSeries.objects.filter(is_published=True).select_related('category')
+        return (
+            TVSeries.objects
+            .filter(is_published=True)
+            .select_related('category')
+            .prefetch_related('comments')
+        )
 
 
 class SeriesDetail(DetailView):
@@ -55,7 +60,7 @@ class SerialsCategory(ListView):
         return TVSeries.objects.filter(
             category__slug=self.kwargs['category_slug'],
             is_published=True
-        ).select_related('category')
+        ).select_related('category').prefetch_related('comments')
 
 
 class CrewDetail(DetailView):
