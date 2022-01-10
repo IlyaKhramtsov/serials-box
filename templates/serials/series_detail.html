@@ -125,7 +125,7 @@
                             <div class="section-title">
                                 <h5>Отзывы</h5>
                             </div>
-                            {% for comment in series.comments.all %}
+                            {% for comment in comments %}
                             <div class="anime__review__item">
                                 <div class="anime__review__item__pic">
                                     {% if comment.author.profile.photo %}
