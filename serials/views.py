@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, View
 
 from serials.forms import CommentForm
-from serials.models import Crew, TVSeries
+from serials.models import Crew, TVSeries, Comment
 
 
 class SerialsHomeView(ListView):
@@ -32,7 +32,9 @@ class SeriesDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["comment_form"] = CommentForm()
+        comment = Comment.objects.filter(series=self.object.pk).prefetch_related('author')
+        context['comments'] = comment
+        context['comment_form'] = CommentForm()
         return context
 
 
