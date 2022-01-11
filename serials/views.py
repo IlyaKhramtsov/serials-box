@@ -32,7 +32,7 @@ class SeriesDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        comment = Comment.objects.filter(series=self.object.pk).prefetch_related('author')
+        comment = Comment.objects.filter(series=self.object.pk).prefetch_related('author__profile')
         context['comments'] = comment
         context['comment_form'] = CommentForm()
         return context
