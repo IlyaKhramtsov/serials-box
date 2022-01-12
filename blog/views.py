@@ -25,7 +25,7 @@ class BlogHomeView(ListView):
 
 
 class ArticleDetail(DetailView):
-    model = Article
+    queryset = Article.objects.select_related('author')
     template_name = 'blog/article.html'
     slug_url_kwarg = 'article_slug'
     context_object_name = 'article'
