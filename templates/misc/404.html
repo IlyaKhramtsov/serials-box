@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Страница не найдена{% endblock title %}
+
+{% block content %}
+    <div class="custom-center-block">
+        <p class="custom-text-block">Страница {{ path }} не найдена</p>
+        <div class="custom-button-block">
+            <a href="{% url 'home' %}" class="button button_style_blue">Перейти на главную</a>
+        </div>
+    </div>
+{% endblock content %}
