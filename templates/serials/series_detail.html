@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load embed_video_tags %}
-{% load serials_tags %}
 {% load static %}
 
 {% block title %}{{ series.title }}{% endblock title %}
@@ -36,9 +35,9 @@
                                     </div>
                                 </div>
                             </div>
+                            {% if user.is_authenticated %}
                             <div class="anime__details__btn">
-                                {% is_favorite slug=series.slug user_id=user.id as is_user_favorite %}
-                                {% if not is_user_favorite %}
+                                {% if not is_favorite %}
                                     <form action="{% url 'add_favorite' series.slug %}" method="post">
                                         {% csrf_token %}
                                         <button type="submit" name="series_slug" value="{{ series.slug }}"
@@ -52,6 +51,7 @@
                                     </form>
                                 {% endif %}
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
