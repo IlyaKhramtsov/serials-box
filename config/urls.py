@@ -1,4 +1,5 @@
 from django.conf.urls.static import static
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include, path
 
@@ -14,6 +15,7 @@ urlpatterns = [
     path('captcha/', include('captcha.urls')),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('', include('serials.urls')),
+    url('', include('social_django.urls', namespace='social'))
 ]
 
 if settings.DEBUG:
