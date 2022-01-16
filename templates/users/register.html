@@ -37,7 +37,9 @@
                 <div class="login__social__links">
                     <h3>Войти с помощью:</h3>
                     <ul>
-                        <li><a href="#" class="github"><i class="fab fa-github"></i> Войти с помощью GitHub</a></li>
+                        <li>
+                            <a href="{% url 'social:begin' 'github' %}" class="github"><i class="fab fa-github"></i> Войти с помощью GitHub</a>
+                        </li>
                     </ul>
                 </div>
             </div>
