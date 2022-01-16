@@ -72,7 +72,7 @@ class ContactFormView(SuccessMessageMixin, CreateView):
 
 class UserProfileView(DetailView):
     """Show user profile information."""
-    model = Profile
+    queryset = Profile.objects.select_related('user')
     template_name = 'users/user_profile.html'
     context_object_name = 'page_user'
 
@@ -83,7 +83,7 @@ class UserProfileView(DetailView):
 
 class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update user profile information."""
-    model = Profile
+    queryset = Profile.objects.select_related('user')
     form_class = ChangeProfileForm
     template_name = 'users/edit_profile.html'
     success_url = reverse_lazy('home')
