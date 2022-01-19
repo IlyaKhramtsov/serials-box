@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load embed_video_tags %}
 {% load static %}
+{% load cache %}
 
 {% block title %}{{ series.title }}{% endblock title %}
 
@@ -15,6 +16,7 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="anime__details__text">
+                            {% cache 60 series_info %}
                             <div class="anime__details__title">
                                 <h3>{{ series.title }}</h3>
                             </div>
@@ -27,14 +29,9 @@
                                             <li><span>Жанры:</span>{{ series.genres.all|safeseq|join:", " }}</li>
                                         </ul>
                                     </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <ul>
-                                            <li><span>Scores:</span> 7.31 / 1,515</li>
-                                            <li><span>Rating:</span> 8.5 / 161 times</li>
-                                        </ul>
-                                    </div>
                                 </div>
                             </div>
+                            {% endcache %}
                             {% if user.is_authenticated %}
                             <div class="anime__details__btn">
                                 {% if not is_favorite %}
@@ -70,6 +67,7 @@
                         </div>
                     </div>
                 </div>
+            {% cache 60 crew %}
                 <div class="row">
                 <div class="col-lg-8">
                     <div class="trending__product">
@@ -119,6 +117,7 @@
                         </div>
                     </div>
                 </div>
+            {% endcache %}
                 <div class="row">
                     <div class="col-lg-8 col-md-8">
                         <div class="anime__details__review">
