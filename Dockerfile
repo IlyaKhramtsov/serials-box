@@ -1,14 +1,18 @@
-FROM python:3.9-alpine
+FROM python:3.9.5-slim
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+RUN apt-get update \
+    && apt-get -y install libpq-dev gcc \
+    && pip install psycopg2
 
-COPY requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip
+
+COPY ./requirements.txt /usr/src/app/
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY . /usr/src/app/
