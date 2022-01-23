@@ -3,6 +3,7 @@ from django.contrib import admin
 from serials.models import Category, Comment, Crew, Genre, TVSeries
 
 
+@admin.register(TVSeries)
 class TVSerialsAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'poster', 'is_published')
     list_display_links = ('id', 'title')
@@ -11,6 +12,7 @@ class TVSerialsAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     list_display_links = ('id', 'name')
@@ -18,6 +20,7 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
+@admin.register(Crew)
 class CrewAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'photo')
     list_display_links = ('id', 'name')
@@ -25,6 +28,7 @@ class CrewAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
+@admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     list_display_links = ('id', 'name')
@@ -37,9 +41,3 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('series', 'created')
     list_filter = ('created', 'updated')
     search_fields = ('text',)
-
-
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Crew, CrewAdmin)
-admin.site.register(Genre, GenreAdmin)
-admin.site.register(TVSeries, TVSerialsAdmin)
