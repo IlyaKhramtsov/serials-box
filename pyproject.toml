@@ -14,9 +14,10 @@ django-simple-captcha = "^0.5.14"
 django-ckeditor = "^6.1.0"
 django-environ = "^0.8.1"
 social-auth-app-django = "^5.0.0"
+gunicorn = "^20.1.0"
+django-debug-toolbar = "^3.2.4"
 
 [tool.poetry.dev-dependencies]
-django-debug-toolbar = "^3.2.2"
 isort = "^5.10.1"
 coverage = "^6.2"
 
