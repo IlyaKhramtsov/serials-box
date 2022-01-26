@@ -2,3 +2,8 @@
 tmp
 .coverage
 htmlcov
+media/
+static/admin
+static/ckeditor
+poetry.lock
+pyproject.toml
