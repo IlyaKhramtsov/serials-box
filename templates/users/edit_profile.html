@@ -9,7 +9,7 @@
             <div class="col-lg-6">
                 <div class="login__form">
                     <h3>Редактировать профиль</h3>
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{form}}
                         <button type="submit" class="site-btn">Редактировать</button>
