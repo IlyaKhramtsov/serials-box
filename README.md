@@ -3,7 +3,7 @@
 ### Description
 Serials box is an online service for information related to television series - including cast,
 crew and personal biographies, plot summaries, and where users can leave comments and write articles about the series.
-###Features
+### Features
 Series pages and the blog are available to all users, but only registered and logged in users can leave comments on the series and add new articles to the blog. Registered users can add series to their favorites and like articles.
 
 Each registered user has access to a personal account, where he can change his username, add an avatar, write information about himself and set his date of birth.
