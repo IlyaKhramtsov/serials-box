@@ -15,17 +15,11 @@
                 <div class="header__nav">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li class="{% activate_on 'home' %}"><a href="{% url 'home' %}">Главная</a></li>
-                            <li class="{% activate_on 'category' %}"><a href="{% url 'home' %}">Категории <span class="fas fa-angle-down"></span></a>
-                                <ul class="dropdown">
-                                    <li><a href="{% url 'home' %}">Все категории</a></li>
-                                    {% get_categories as categories %}
-                                    {% for c in categories %}
-                                    <li><a href="{{c.get_absolute_url}}">{{c.name}}</a></li>
-                                    {% endfor %}
-                                </ul>
+                            <li><a href="{% url 'home' %}">Главная</a></li>
+                            <li><a href="{% url 'categories' %}">Категории <span class="fas fa-angle-down"></span></a>
+
                             </li>
-                            <li class="{% activate_on 'blog' %}"><a href="{% url 'blog' %}">Блог</a></li>
+                            <li><a href="{% url 'blog' %}">Блог</a></li>
                             <li>
                             <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'search' %}">
                                 <input class="form-control mr-sm-2" name="q" type="text" placeholder="Поиск сериала" aria-label="Search">
