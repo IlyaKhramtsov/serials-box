@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, View
 
 from serials.forms import CommentForm
-from serials.models import Crew, TVSeries
+from serials.models import Category, Crew, TVSeries
 
 
 class SerialsHomeView(ListView):
@@ -55,7 +55,7 @@ class SerialsCategory(ListView):
     """Show TV series by category."""
     paginate_by = 6
     model = TVSeries
-    template_name = 'serials/index.html'
+    template_name = 'serials/category.html'
     context_object_name = 'serials'
 
     def get_queryset(self):
@@ -63,6 +63,21 @@ class SerialsCategory(ListView):
             category__slug=self.kwargs['category_slug'],
             is_published=True
         ).select_related('category').prefetch_related('comments')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = Category.objects.get(slug=self.kwargs['category_slug'])
+        return context
+
+
+class Categories(ListView):
+    """Shows all categories of series."""
+    model = Category
+    template_name = 'serials/categories.html'
+    context_object_name = 'categories'
+
+    def get_queryset(self):
+        return Category.objects.all()
 
 
 class CrewDetail(DetailView):
