@@ -1,15 +1,9 @@
 from django import template
 from django.db.models import Count
 
-from serials.models import Category, TVSeries
+from serials.models import TVSeries
 
 register = template.Library()
-
-
-@register.simple_tag()
-def get_categories():
-    """Show all categories."""
-    return Category.objects.all()
 
 
 @register.inclusion_tag('serials/tags/last_serials.html')
@@ -29,11 +23,3 @@ def get_most_commented_serials(count=5):
         .order_by('-total_comments')[:count]
     )
     return {'most_commented_serials': serials}
-
-
-@register.simple_tag(takes_context=True)
-def activate_on(context, name):
-    """Render one active item on menu."""
-    if context['request'].resolver_match.url_name == name:
-        return 'active'
-    return ''

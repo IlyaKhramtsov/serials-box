@@ -34,4 +34,15 @@
         return false;
      });
 
+    /*------------------
+        Active Menu
+    --------------------*/
+    $('.header__menu a').each(function() {
+        let location = window.location.href;
+        let link = this.href;
+        if(location == link) {
+            $(this).parent().addClass('active');
+        }
+    });
+
 })(jQuery);
