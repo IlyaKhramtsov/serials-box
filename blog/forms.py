@@ -6,7 +6,7 @@ from blog.models import Article
 class AddPostForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['title', 'slug', 'content', 'photo']
+        fields = ['title', 'content', 'photo']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Название'}),
         }

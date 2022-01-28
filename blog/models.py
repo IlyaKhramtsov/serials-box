@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 
 from ckeditor.fields import RichTextField
+from slugify import slugify
 
 
 class Article(models.Model):
@@ -21,11 +22,17 @@ class Article(models.Model):
         verbose_name_plural = 'Статьи'
 
     def total_likes(self):
+        """Counts all likes for article."""
         return self.likes.count()
 
-    def __str__(self):
-        return self.title
+    def save(self, *args, **kwargs):
+        """Makes auto slug and saves to database."""
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         """Get absolute URL for articles."""
         return reverse('article_detail', kwargs={'article_slug': self.slug})
+
+    def __str__(self):
+        return self.title
