@@ -64,12 +64,33 @@ class ChangeProfileForm(forms.ModelForm):
         model = Profile
         fields = ('photo', 'bio', 'birthday', 'city')
         widgets = {
-            'birthday': forms.DateInput(attrs={'type': 'date'}),
+            'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control'}),
+            'birthday': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'city': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 
 class ChangeUserForm(forms.ModelForm):
     """Change user information form."""
+    username = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    first_name = forms.CharField(
+        label='Имя',
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    last_name = forms.CharField(
+        label='Фамилия',
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email')
