@@ -180,3 +180,20 @@ CACHES = {
         'LOCATION': os.path.join(BASE_DIR, 'tmp/project_cache'),
     }
 }
+
+# ckeditor settings
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['Image', 'HorizontalRule'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source']
+        ],
+        'height': 200,
+        'width': '100%',
+    },
+}

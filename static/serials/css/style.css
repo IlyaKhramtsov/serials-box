@@ -2159,3 +2159,7 @@ ol {
 a, a:hover,a:visited, a:focus {
     text-decoration:none;
 }
+
+.django-ckeditor-widget {
+  width: 100%;
+}

@@ -8,5 +8,6 @@ class AddPostForm(forms.ModelForm):
         model = Article
         fields = ['title', 'content', 'photo']
         widgets = {
-            'title': forms.TextInput(attrs={'placeholder': 'Название'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }

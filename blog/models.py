@@ -9,7 +9,7 @@ from slugify import slugify
 class Article(models.Model):
     title = models.CharField(max_length=255, verbose_name='Заголовок')
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
-    content = RichTextField(blank=True, null=True, verbose_name='Текст статьи')
+    content = RichTextField(blank=True, null=True, verbose_name='Текст статьи', config_name='default')
     photo = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name='Фото')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     likes = models.ManyToManyField(User, related_name='blog_articles', verbose_name='Лайки')
