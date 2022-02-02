@@ -3,7 +3,6 @@
 {% block title %}{{ crew.name }}{% endblock title %}
 
 {% block content %}
-
 <section class="anime-details spad" xmlns="http://www.w3.org/1999/html">
     <div class="container">
         <div class="anime__details__content">
@@ -17,21 +16,58 @@
                             <h3>{{ crew.name }}</h3>
                         </div>
                         <p>{{ crew.description|linebreaks }}</p>
-                        <!-- Сериалы в которых участвовал как актер -->
-                        {% for actor in crew.series_actors.all %}
-                            {{ actor.title }}
-                        {% endfor %}
-                        <!-- Конец -->
-
-                        <!-- Сериалы в которых участвовал как режиссер -->
-                        {% for director in crew.series_directors.all %}
-                            {{ director.title }}
-                        {% endfor %}
-                        <!-- Конец -->
                     </div>
                 </div>
             </div>
         </div>
+         <div class="row">
+             <div class="col-lg-12">
+                 <div class="trending__product">
+                     {% if crew.series_actors.all %}
+                     <div class="row">
+                         <div class="col-lg-8 col-md-8 col-sm-8">
+                             <div class="section-title">
+                                 <h5>Актёр</h5>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="row">
+                         {% for actor in crew.series_actors.all %}
+                         <div class="col-lg-3 col-md-6 col-sm-6">
+                             <div class="product__item">
+                                 <div class="product__item__pic set-bg" data-setbg="{{ actor.poster.url }}"></div>
+                                 <div class="product__item__text">
+                                     <h5><a href="{{ actor.get_absolute_url }}">{{ actor.title }}</a></h5>
+                                 </div>
+                             </div>
+                         </div>
+                         {% endfor %}
+                     </div>
+                     {% endif %}
+                     {% if crew.series_directors.all %}
+                     <div class="row">
+                         <div class="col-lg-8 col-md-8 col-sm-8">
+                             <div class="section-title">
+                                 <h5>Режиссёр</h5>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="row">
+                         {% for director in crew.series_directors.all %}
+                         <div class="col-lg-3 col-md-6 col-sm-6">
+                             <div class="product__item">
+                                 <div class="product__item__pic set-bg" data-setbg="{{ director.poster.url }}"></div>
+                                 <div class="product__item__text">
+                                     <h5><a href="{{ director.get_absolute_url }}">{{ director.title }}</a></h5>
+                                 </div>
+                             </div>
+                         </div>
+                         {% endfor %}
+                     </div>
+                     {% endif %}
+                 </div>
+             </div>
+         </div>
     </div>
 </section>
 {% endblock %}
