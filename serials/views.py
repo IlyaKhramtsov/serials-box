@@ -25,7 +25,6 @@ class SerialsHomeView(ListView):
 
 class SeriesDetail(DetailView):
     """Shows information about the series."""
-
     queryset = TVSeries.objects.prefetch_related('comments__author__profile')
     template_name = 'serials/series_detail.html'
     slug_url_kwarg = 'series_slug'
@@ -82,7 +81,7 @@ class Categories(ListView):
 
 class CrewDetail(DetailView):
     """Show information about the directors and actors of the series."""
-    model = Crew
+    queryset = Crew.objects.prefetch_related('series_actors', 'series_directors')
     template_name = 'serials/crew_detail.html'
     slug_url_kwarg = 'crew_slug'
     context_object_name = 'crew'
