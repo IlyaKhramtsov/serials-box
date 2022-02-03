@@ -32,16 +32,18 @@
                          </div>
                      </div>
                      <div class="row">
-                         {% for actor in crew.series_actors.all %}
-                         <div class="col-lg-3 col-md-6 col-sm-6">
-                             <div class="product__item">
-                                 <div class="product__item__pic set-bg" data-setbg="{{ actor.poster.url }}"></div>
-                                 <div class="product__item__text">
-                                     <h5><a href="{{ actor.get_absolute_url }}">{{ actor.title }}</a></h5>
+                         <div class="owl-carousel owl-theme">
+                             {% for actor in crew.series_actors.all %}
+                             <div class="item">
+                                 <div class="product__item">
+                                     <div class="product__item__pic set-bg" data-setbg="{{ actor.poster.url }}"></div>
+                                     <div class="product__item__text">
+                                         <h5><a href="{{ actor.get_absolute_url }}">{{ actor.title }}</a></h5>
+                                     </div>
                                  </div>
                              </div>
+                             {% endfor %}
                          </div>
-                         {% endfor %}
                      </div>
                      {% endif %}
                      {% if crew.series_directors.all %}
@@ -53,16 +55,18 @@
                          </div>
                      </div>
                      <div class="row">
-                         {% for director in crew.series_directors.all %}
-                         <div class="col-lg-3 col-md-6 col-sm-6">
-                             <div class="product__item">
-                                 <div class="product__item__pic set-bg" data-setbg="{{ director.poster.url }}"></div>
-                                 <div class="product__item__text">
-                                     <h5><a href="{{ director.get_absolute_url }}">{{ director.title }}</a></h5>
+                         <div class="owl-carousel owl-theme">
+                             {% for director in crew.series_directors.all %}
+                             <div class="item">
+                                 <div class="product__item">
+                                     <div class="product__item__pic set-bg" data-setbg="{{ director.poster.url }}"></div>
+                                     <div class="product__item__text">
+                                         <h5><a href="{{ director.get_absolute_url }}">{{ director.title }}</a></h5>
+                                     </div>
                                  </div>
                              </div>
+                             {% endfor %}
                          </div>
-                         {% endfor %}
                      </div>
                      {% endif %}
                  </div>
