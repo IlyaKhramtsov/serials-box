@@ -9,7 +9,7 @@ Series pages and the blog are available to all users, but only registered and lo
 Each registered user has access to a personal account, where he can change his username, add an avatar, write information about himself and set his date of birth.
 On the profile page, the user has access to articles they like, favorite series, and adding an article. The article can be deleted and edited only by the author of the article and the admin.
 
-User profile pages show a user's registration date and username and, optionally, their avatar, bio and age.
+User profile page show a user's registration date and username and, optionally, their avatar, bio and age.
 
 ## Technologies:
 - Python 3.9
@@ -17,3 +17,25 @@ User profile pages show a user's registration date and username and, optionally,
 - Nginx
 - Gunicorn
 - PostgreSQL
+- Docker, docker-compose
+
+## Setup:
+- Clone the github repository:
+```bash
+$ git clone https://github.com/IlyaKhramtsov/serials-box.git
+```
+- Enter the project directory:
+```bash
+$ cd serials-box/
+```
+- Create an .env file in the current directory, add the environment variables there 
+as in the .env.template file from this repository.
+
+- Start docker-compose:
+```bash
+$ docker-compose -f docker-compose.yml up -d
+```
+- Create superuser:
+```bash
+$ docker-compose -f docker-compose.yml run --rm web python manage.py createsuperuser
+```
