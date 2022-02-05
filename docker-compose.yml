@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   web:
-    build: ./
+    image: 'elijahkram/serials-box:latest'
     container_name: serials_box_web
     restart: always
     command: bash entrypoint.sh
