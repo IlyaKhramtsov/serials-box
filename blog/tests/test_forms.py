@@ -18,7 +18,6 @@ class TestForms(TestCase):
         }
         data = {
             'title': 'Test article',
-            'slug': 'test-article',
             'content': 'test article content',
         }
         form = AddPostForm(data, photo)
@@ -29,4 +28,4 @@ class TestForms(TestCase):
         form = AddPostForm(data={})
 
         self.assertFalse(form.is_valid())
-        self.assertEqual(len(form.errors), 3)
+        self.assertEqual(len(form.errors), 2)

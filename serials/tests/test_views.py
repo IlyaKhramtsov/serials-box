@@ -155,7 +155,7 @@ class SerialsCategoryTest(TestCase):
 
     def test_view_uses_correct_template(self):
         response = self.client.get(self.category.get_absolute_url())
-        self.assertTemplateUsed(response, 'serials/index.html')
+        self.assertTemplateUsed(response, 'serials/category.html')
 
     def test_pagination_is_six(self):
         response = self.client.get(self.category.get_absolute_url())

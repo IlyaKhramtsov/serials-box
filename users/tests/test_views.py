@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test.utils import override_settings
 from django.test import TestCase
 from django.urls import reverse
 
@@ -10,6 +11,8 @@ from serials.models import Category, TVSeries
 from users.models import Contact, Profile
 
 
+@override_settings(AUTHENTICATION_BACKENDS=
+                   ('django.contrib.auth.backends.ModelBackend',))
 class UserRegisterViewTests(TestCase):
 
     def test_view_url_exists_at_desired_location(self):
