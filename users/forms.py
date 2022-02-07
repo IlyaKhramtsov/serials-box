@@ -64,10 +64,18 @@ class ChangeProfileForm(forms.ModelForm):
         model = Profile
         fields = ('photo', 'bio', 'birthday', 'city')
         widgets = {
-            'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'bio': forms.Textarea(attrs={'class': 'form-control'}),
-            'birthday': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'photo': forms.ClearableFileInput(
+                attrs={'class': 'form-control'}
+            ),
+            'bio': forms.Textarea(
+                attrs={'class': 'form-control'}
+            ),
+            'birthday': forms.DateInput(
+                attrs={'class': 'form-control', 'type': 'date'}
+            ),
+            'city': forms.TextInput(
+                attrs={'class': 'form-control'}
+            ),
         }
 
 
@@ -75,20 +83,24 @@ class ChangeUserForm(forms.ModelForm):
     """Change user information form."""
     username = forms.CharField(
         max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
     )
     first_name = forms.CharField(
         label='Имя',
         max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False
     )
     last_name = forms.CharField(
         label='Фамилия',
         max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False
     )
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control'})
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+        required=False
     )
 
     class Meta:
