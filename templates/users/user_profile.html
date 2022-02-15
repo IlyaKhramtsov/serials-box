@@ -24,7 +24,9 @@
                                     <ul>
                                         <li><span>Имя</span> {{ page_user.user.first_name }}</li>
                                         <li><span>Фамилия</span> {{ page_user.user.last_name }}</li>
-                                        <li><span>Город</span> {{ page_user.city }}</li>
+                                        {% if page_user.birthday %}
+                                            <li><span>Город</span> {{ page_user.city }}</li>
+                                        {% endif %}
                                         {% if page_user.birthday %}
                                             <li><span>Возраст</span> {{ page_user.get_age }}</li>
                                         {% endif %}
