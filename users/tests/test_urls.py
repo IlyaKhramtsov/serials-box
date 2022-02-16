@@ -15,39 +15,38 @@ from users.views import (
 
 
 class TestUsersUrls(SimpleTestCase):
-
     def test_login_url_is_resolved(self):
-        url = reverse('login')
+        url = reverse("login")
         self.assertEqual(resolve(url).func.view_class, LoginUser)
 
     def test_logout_url_is_resolved(self):
-        url = reverse('logout')
+        url = reverse("logout")
         self.assertEqual(resolve(url).func, logout_user)
 
     def test_register_url_is_resolved(self):
-        url = reverse('register')
+        url = reverse("register")
         self.assertEqual(resolve(url).func.view_class, UserRegisterView)
 
     def test_edit_user_url_is_resolved(self):
-        url = reverse('edit_user', kwargs={'pk': 1})
+        url = reverse("edit_user", kwargs={"pk": 1})
         self.assertEqual(resolve(url).func.view_class, UserEditView)
 
     def test_profile_is_resolved(self):
-        url = reverse('profile', kwargs={'slug': 'username'})
+        url = reverse("profile", kwargs={"slug": "username"})
         self.assertEqual(resolve(url).func.view_class, UserProfileView)
 
     def test_edit_profile_url_is_resolved(self):
-        url = reverse('edit_profile', kwargs={'slug': 'username'})
+        url = reverse("edit_profile", kwargs={"slug": "username"})
         self.assertEqual(resolve(url).func.view_class, ProfileEditView)
 
     def test_liked_articles_url_is_resolved(self):
-        url = reverse('liked_articles')
+        url = reverse("liked_articles")
         self.assertEqual(resolve(url).func.view_class, UserLikedArticles)
 
     def test_favorites_url_is_resolved(self):
-        url = reverse('favorites')
+        url = reverse("favorites")
         self.assertEqual(resolve(url).func.view_class, UserFavoriteSerials)
 
     def test_contact_url_is_resolved(self):
-        url = reverse('contact')
+        url = reverse("contact")
         self.assertEqual(resolve(url).func.view_class, ContactFormView)
