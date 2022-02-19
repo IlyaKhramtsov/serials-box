@@ -1,5 +1,3 @@
-import os
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
@@ -7,18 +5,12 @@ from blog.forms import AddPostForm
 
 
 class TestForms(TestCase):
-
     def test_add_post_form_valid_data(self):
-        image_file = open('static/serials/images/avatar.png', 'rb')
-        photo = {
-            'photo': SimpleUploadedFile(
-                image_file.name,
-                image_file.read()
-            )
-        }
+        image_file = open("static/serials/images/avatar.png", "rb")
+        photo = {"photo": SimpleUploadedFile(image_file.name, image_file.read())}
         data = {
-            'title': 'Test article',
-            'content': 'test article content',
+            "title": "Test article",
+            "content": "test article content",
         }
         form = AddPostForm(data, photo)
 

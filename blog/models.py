@@ -8,38 +8,26 @@ from slugify import slugify
 
 class Article(models.Model):
     """Model representing the article."""
-    title = models.CharField(max_length=255, verbose_name='Заголовок')
+
+    title = models.CharField(max_length=255, verbose_name="Заголовок")
     slug = models.SlugField(
-        max_length=255, unique=True, db_index=True, verbose_name='URL'
+        max_length=255, unique=True, db_index=True, verbose_name="URL"
     )
     content = RichTextField(
-        blank=True,
-        null=True,
-        verbose_name='Текст статьи',
-        config_name='default'
+        blank=True, null=True, verbose_name="Текст статьи", config_name="default"
     )
-    photo = models.ImageField(
-        upload_to='photos/%Y/%m/%d/', verbose_name='Фото'
-    )
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name='Автор'
-    )
+    photo = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор")
     likes = models.ManyToManyField(
-        User, related_name='blog_articles', verbose_name='Лайки'
+        User, related_name="blog_articles", verbose_name="Лайки"
     )
-    time_create = models.DateTimeField(
-        auto_now_add=True, verbose_name='Время создания'
-    )
-    time_update = models.DateTimeField(
-        auto_now=True, verbose_name='Время изменения'
-    )
-    is_published = models.BooleanField(
-        default=True, verbose_name='Публикация'
-    )
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+    time_update = models.DateTimeField(auto_now=True, verbose_name="Время изменения")
+    is_published = models.BooleanField(default=True, verbose_name="Публикация")
 
     class Meta:
-        verbose_name = 'Статья'
-        verbose_name_plural = 'Статьи'
+        verbose_name = "Статья"
+        verbose_name_plural = "Статьи"
 
     def __str__(self):
         return self.title
@@ -51,7 +39,7 @@ class Article(models.Model):
 
     def get_absolute_url(self):
         """Get absolute URL for articles."""
-        return reverse('article_detail', kwargs={'article_slug': self.slug})
+        return reverse("article_detail", kwargs={"article_slug": self.slug})
 
     def total_likes(self):
         """Return the number of all likes for the article."""

@@ -21,23 +21,25 @@ from users.models import Contact, Profile
 
 class UserRegisterView(CreateView):
     """Register user."""
+
     form_class = RegisterUserForm
-    template_name = 'users/register.html'
-    success_url = reverse_lazy('login')
+    template_name = "users/register.html"
+    success_url = reverse_lazy("login")
 
     def form_valid(self, form):
         user = form.save()
-        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
-        return redirect('home')
+        login(self.request, user, backend="django.contrib.auth.backends.ModelBackend")
+        return redirect("home")
 
 
 class UserEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update user information."""
+
     model = User
     form_class = ChangeUserForm
-    template_name = 'users/edit_user.html'
-    success_url = reverse_lazy('home')
-    login_url = 'login'
+    template_name = "users/edit_user.html"
+    success_url = reverse_lazy("home")
+    login_url = "login"
 
     def test_func(self):
         return self.get_object().id == self.request.user.id
@@ -45,26 +47,28 @@ class UserEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class LoginUser(LoginView):
     """Login user."""
+
     form_class = LoginUserForm
-    template_name = 'users/login.html'
+    template_name = "users/login.html"
 
     def get_success_url(self):
-        return reverse_lazy('home')
+        return reverse_lazy("home")
 
 
 def logout_user(request):
     """Logout user."""
     logout(request)
-    return redirect('login')
+    return redirect("login")
 
 
 class ContactFormView(SuccessMessageMixin, CreateView):
     """Contact form."""
+
     model = Contact
     form_class = ContactForm
-    template_name = 'users/contact.html'
-    success_url = reverse_lazy('home')
-    success_message = 'Форма успешно отправлена!'
+    template_name = "users/contact.html"
+    success_url = reverse_lazy("home")
+    success_message = "Форма успешно отправлена!"
 
     def get_success_message(self, cleaned_data):
         return self.success_message % cleaned_data
@@ -72,45 +76,51 @@ class ContactFormView(SuccessMessageMixin, CreateView):
 
 class UserProfileView(DetailView):
     """Show user profile information."""
-    queryset = Profile.objects.select_related('user')
-    template_name = 'users/user_profile.html'
-    context_object_name = 'page_user'
+
+    queryset = Profile.objects.select_related("user")
+    template_name = "users/user_profile.html"
+    context_object_name = "page_user"
 
     def get_slug_field(self):
         """Get the name of a slug field to be used to look up by slug."""
-        return 'user__username'
+        return "user__username"
 
 
 class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Update user profile information."""
-    queryset = Profile.objects.select_related('user')
+
+    queryset = Profile.objects.select_related("user")
     form_class = ChangeProfileForm
-    template_name = 'users/edit_profile.html'
-    success_url = reverse_lazy('home')
+    template_name = "users/edit_profile.html"
+    success_url = reverse_lazy("home")
 
     def get_slug_field(self):
         """Get the name of a slug field to be used to look up by slug."""
-        return 'user__username'
+        return "user__username"
 
     def test_func(self):
         return self.get_object().user == self.request.user
 
 
 class UserFavoriteSerials(LoginRequiredMixin, ListView):
+    """Show a list of the user's favorite series."""
+
     model = TVSeries
-    template_name = 'users/favorite.html'
-    context_object_name = 'user_favorites'
-    login_url = 'login'
+    template_name = "users/favorite.html"
+    context_object_name = "user_favorites"
+    login_url = "login"
 
     def get_queryset(self):
         return TVSeries.objects.filter(favorite=self.request.user)
 
 
 class UserLikedArticles(LoginRequiredMixin, ListView):
+    """Show a list of articles liked by the user."""
+
     model = Article
-    template_name = 'users/liked_articles.html'
-    context_object_name = 'user_likes'
-    login_url = 'login'
+    template_name = "users/liked_articles.html"
+    context_object_name = "user_likes"
+    login_url = "login"
 
     def get_queryset(self):
         return Article.objects.filter(likes=self.request.user)
