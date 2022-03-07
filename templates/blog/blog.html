@@ -10,6 +10,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
+                    {% if articles %}
                     <div class="row">
                       {% for article in articles %}
                         <div class="col-lg-6">
@@ -22,6 +23,10 @@
                         </div>
                       {% endfor %}
                     </div>
+                    {% else %}
+                    <p>Здесь пока пусто...</p>
+                    <a href="{% url 'add_article' %}">Добавить статью</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

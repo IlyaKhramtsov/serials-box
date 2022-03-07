@@ -31,6 +31,7 @@
                             </div>
                         </div>
                     </div>
+                    {% if serials %}
                     <div class="row">
                         {% for series in serials %}
                         <div class="col-lg-4 col-md-6 col-sm-6">
@@ -45,6 +46,9 @@
                         </div>
                         {% endfor %}
                     </div>
+                    {% else %}
+                    <p>Здесь пока пусто...</p>
+                    {% endif %}
                     {% include 'includes/paginator.html' %}
                 </div>
             </div>
